@@ -5,6 +5,7 @@ import android.util.Log
 import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.androiddevs.mvvmnewsapp.R
 import com.androiddevs.mvvmnewsapp.adapters.NewsAdapter
@@ -16,8 +17,8 @@ import kotlinx.android.synthetic.main.fragment_breaking_news.rvBreakingNews
 
 class BreakingNewsFragment : Fragment(R.layout.fragment_breaking_news) {
 
-    lateinit var viewModel: NewsViewModel
-    lateinit var newsAdapter: NewsAdapter
+    private lateinit var viewModel: NewsViewModel
+    private lateinit var newsAdapter: NewsAdapter
 
     private val TAG = "BreakingNewsFragment"
 
@@ -27,6 +28,8 @@ class BreakingNewsFragment : Fragment(R.layout.fragment_breaking_news) {
         assignViewModel()
 
         setupRecyclerView()
+
+        setupRecyclerViewOnClickListener()
 
         setupObservers()
     }
@@ -65,6 +68,18 @@ class BreakingNewsFragment : Fragment(R.layout.fragment_breaking_news) {
                 }
             }
         })
+    }
+
+    private fun setupRecyclerViewOnClickListener() {
+        newsAdapter.setOnItemClickListener {
+            val bundle = Bundle().apply {
+                putSerializable("article", it)
+            }
+            findNavController().navigate(
+                R.id.action_breakingNewsFragment_to_articleFragment,
+                bundle
+            )
+        }
     }
 
     private fun hideProgressBar() {
